@@ -1,41 +1,29 @@
 package mx.jorge.arboles.utilidades;
 
 import java.util.LinkedList;
-import java.util.Queue;
+
+import org.json.JSONArray;
 
 public class Arbol {
 
 	private Vertice raiz;
 
-	public Arbol(int valor) {
-		this.raiz = new Vertice(valor);
+	public Arbol() {
+		raiz = null;
 	}
 
 	private class Vertice {
 		int value;
-		int altura;
-		Vertice padre;
+		int distancia = 0;
 		Vertice left;
 		Vertice right;
 
 		Vertice(int value) {
-			value = value;
-			right = null;
-			left = null;
-			padre = null;
-			altura = 0;
-
+			this.value = value;
+			this.right = null;
+			this.left = null;
+			this.distancia = 0;
 		}
-	}
-
-	// metodo auxiliar para obtener la altura de un vertice
-	private int obtenAltura(Vertice v) {
-		return 1 + Math.min(obtenAltura(v.left),obtenAltura(v.right));
-	}
-
-	// metodo que obtiene la altura de una arbol
-	public int altura() {
-		return Math.max(obtenAltura(this.raiz.left), obtenAltura(this.raiz.right));
 	}
 
 	// metodo para agregar de forma recursiva un valor
@@ -52,9 +40,112 @@ public class Arbol {
 		return actual;
 	}
 
+	// metodo para agregar de forma recursiva un valor
+	private Vertice busca(Vertice actual, int valor) {
+		if (actual == null) {
+			return null;
+		}
+		if (actual.value == valor) {
+			return actual;
+		}
+
+		actual.left = busca(actual.left, valor);
+		actual.right = busca(actual.right, valor);
+		if (actual.left != null) {
+			return actual.left;
+		}
+
+		return actual.right;
+	}
+
 	// metodo para agregar un nuevo valor al arbol
 	public void agrega(int value) {
-		this.raiz = agregaRecursivo(raiz, value);
+		this.raiz = agregaRecursivo(this.raiz, value);
+	}
+
+	// Obtiene una altura desde un vertice
+	private int altura(Vertice v) {
+		if (v == null) {
+			return 0;
+		}
+		return 1 + Math.max(altura(v.left), altura(v.right));
+	}
+
+	// Obtiene la altura del arbol
+	public int altura() {
+		return altura(this.raiz) - 1;
+	}
+
+	/*
+	 * metodo que aplica bfs al arbol y devuelve una lista En el orden que son
+	 * visitados
+	 */
+	public JSONArray bfs() {
+		LinkedList<Vertice> cola = new LinkedList<>();
+		JSONArray visitados = new JSONArray();
+		cola.addFirst(this.raiz);
+		visitados.put(this.raiz.value);
+		while (!cola.isEmpty()) {
+			Vertice v = cola.removeLast();
+			if (v.left != null) {
+				cola.addFirst(v.left);
+				visitados.put(v.left.value);
+			}
+
+			if (v.right != null) {
+				cola.addFirst(v.right);
+				visitados.put(v.right.value);
+			}
+
+		}
+		return visitados;
+	}
+
+	/*
+	 * Metodo que busca un valor en el arbol y devuelve el numero de vecinos
+	 * izquierdos y derechos
+	 */
+	public LinkedList<LinkedList<Integer>> vecinos(int valor) {
+		LinkedList<Vertice> cola = new LinkedList<>();
+		LinkedList<Vertice> visitados = new LinkedList<>();
+		cola.addFirst(this.raiz);
+		visitados.push(this.raiz);
+		this.raiz.distancia = 0;
+
+		while (!cola.isEmpty()) {
+			Vertice v = cola.removeLast();
+			if (v.left != null) {
+				v.left.distancia = v.distancia + 1;
+				cola.addFirst(v.left);
+				visitados.push(v.left);
+
+			}
+
+			if (v.right != null) {
+				v.right.distancia = v.distancia + 1;
+				cola.addFirst(v.right);
+				visitados.push(v.right);
+			}
+
+		}
+
+		Vertice b = busca(this.raiz, valor);
+		LinkedList<Integer> izq = new LinkedList<>();
+		LinkedList<Integer> der = new LinkedList<>();
+		for (Vertice v : visitados) {
+			if (v.distancia == b.distancia) {
+				if (v.value < b.value) {
+					izq.add(v.value);
+				} else if (v.value > b.value) {
+					der.add(v.value);
+				}
+
+			}
+		}
+		LinkedList<LinkedList<Integer>> respuesta =  new LinkedList<>();
+		respuesta.add(izq);
+		respuesta.add(der);
+		return respuesta;
 	}
 
 }
