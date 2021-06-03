@@ -9,7 +9,7 @@ Al correr la aplicación utilizando **maven** o **sts4**, la API estará disponi
 ## /height (disponible a través de POST)
 Recibe un json con una arreglo de enteros, conforme se leen los enteros en orden se agregan al árbol de búsqueda, se devuelve como respuesta la altura del árbol (ej. `{ "toTree": [2,1,3]}` devuelve `{ "height": 1}`).
 ## /neighbors (disponible a través de POST)
-Recibe un json con una arreglo de enteros y el valor a obtener su número de vecinos, conforme se leen los enteros en orden se agregan al árbol de búsqueda, se devuelve como respuesta la altura del árbol (ej. `{ "toTree": [2,1,3], "node": 1}` devuelve `{ "neighbors": { "left": "null","left": [3]}}`).
+Recibe un json con una arreglo de enteros y el valor a obtener su número de vecinos, conforme se leen los enteros en orden se agregan al árbol de búsqueda, se devuelve como respuesta la altura del árbol (ej. `{ "toTree": [2,1,3], "node": 1}` devuelve `{ "neighbors": { "left": "null","right": [3]}}`).
 ## /bfs (disponible a través de POST)
 Recibe un json con una arreglo de enteros y el valor a obtener su número de vecinos, conforme se leen los enteros en orden se agregan al árbol de búsqueda, se devuelve como respuesta la altura del árbol (ej. `{ "toTree": [3,4,1,2,-1]}` devuelve `{ "bfs": [3,1,4,-1,2]}`).
 ### Nota final
