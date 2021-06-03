@@ -102,7 +102,7 @@ public class Arbol {
 	}
 
 	/*
-	 * Metodo que busca un valor en el arbol y devuelve el numero de vecinos
+	 * Metodo que busca un valor en el arbol y devuelve los vecinos
 	 * izquierdos y derechos
 	 */
 	public LinkedList<LinkedList<Integer>> vecinos(int valor) {
